@@ -46,7 +46,7 @@ router.get('/:id/actions', (req, res) => {
 })
 
 
-/// adding an actions
+/// adding a project
 
 router.post('/', (req, res) => {
 
@@ -67,6 +67,33 @@ router.post('/', (req, res) => {
             res.status(500).json({ error: "Couldn't add new project to server." })
         })
     }
+})
+
+/// updating a project
+
+router.put('/:id', (req, res) => {
+
+    const { id } = req.params;
+    const updatedProject = req.body;
+
+    if (
+        !updatedProject.description
+        ) {
+    res.status(400).json({ error: "Please provide a new description."})
+
+    } else {
+        dbProjects.update(id, updatedProject)
+            .then((project) => {
+                if (!project) {
+                    res.status.apply(404).json({ error: "The project with that ID doesn't exist."})
+
+                } else {
+                    res.status(200).json(project)
+                }
+            })
+            .catch((err) => {
+                res.status(500).json({ error: "Couldn't update project."})
+            })
 })
 
 
