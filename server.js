@@ -27,9 +27,9 @@ server.use('/api/projects', projectsRouter);
 /// main server get request
 
 server.get('/', (req, res) => {
-    res.status(200).send("Welcome to Anthony's server!")
+    const messageOfTheDay = process.env.MOTD || "Catch 'em all";
+    res.status(200).send(messageOfTheDay);
 })
-
 
 /// listening for server
 

@@ -46,4 +46,28 @@ router.get('/:id/actions', (req, res) => {
 })
 
 
+/// adding an actions
+
+router.post('/', (req, res) => {
+
+    const newProject = req.body;
+
+    if (
+        !newProject.description
+        ) {
+    res.status(400).json({ error: "Please provide a description."})
+
+    } else {
+
+    dbProjects.insert(newProject)
+        .then((addedProject) => {
+            res.status(200).json(addedProject)
+        })
+        .catch((err) => {
+            res.status(500).json({ error: "Couldn't add new project to server." })
+        })
+    }
+})
+
+
 module.exports = router;
