@@ -7,34 +7,32 @@ const morgan = require("morgan");
 
 /// defining routes to server
 
-const projectsRouter = require('./projects/projectsRoutes');
-const actionsRouter = require('./actions/actionsRoutes')
+const projectsRouter = require('./projects/projectsRoutes.js');
+const actionsRouter = require('./actions/actionsRoutes.js')
 
 /// created environment
 
 require('dotenv').config();
-const port = process.env.PORT;
+const port = process.env.PORT || 4000;
 
 /// applying middleware to server
 
 server.use(express.json());
 server.use(helmet());
-server.use(morgan('dev'));
 
 /// applying routes to server
 
 server.use('/api/projects', projectsRouter);
-server.use('/api/actions', actionsRouter);
+
+/// main server get request
+
+server.get('/', (req, res) => {
+    res.status(200).send("Welcome to Anthony's server!")
+})
 
 
 /// listening for server
 
 server.listen(port, () => {
     console.log(`\n*** Server running on http://localhost:${port} ***\n`)
-})
-
-/// main server get request
-
-server.get('/', (req, res) => {
-    res.status(200).send("Welcome to Anthony's server!")
 })
