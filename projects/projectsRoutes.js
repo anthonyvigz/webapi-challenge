@@ -34,6 +34,8 @@ router.get('/:id', (req, res) => {
 
 router.get('/:id/actions', (req, res) => {
 
+    console.log(req.params.id);
+
     const { id } = req.params;
 
     dbProjects.getProjectActions(id)
@@ -48,53 +50,47 @@ router.get('/:id/actions', (req, res) => {
 
 /// adding a project
 
-router.post('/', (req, res) => {
-
-    const newProject = req.body;
-
-    if (
-        !newProject.description
-        ) {
-    res.status(400).json({ error: "Please provide a description."})
-
-    } else {
-
-    dbProjects.insert(newProject)
-        .then((addedProject) => {
-            res.status(200).json(addedProject)
-        })
-        .catch((err) => {
-            res.status(500).json({ error: "Couldn't add new project to server." })
-        })
+router.post("/", async (req, res) => {
+    console.log(req.body);
+    try {
+      const newProject = await dbProjects.insert(req.body);
+        res.json({ message: newProject });
+    } catch (err) {
+        res.status(500).json({ message: "internal server error" });
     }
-})
+  });
 
 /// updating a project
 
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
+	try {
+		const project = await Projects.update(req.params.id, req.body);
+		if (project) {
+			res.status(200).json(project);
+		} else {
+			res.status(404).json({ message: 'The project could not be found.' });
+		}
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({ message: 'Error editing project.' });
+	}
+});
 
-    const { id } = req.params;
-    const updatedProject = req.body;
+/// deleting a project 
 
-    if (
-        !updatedProject.description
-        ) {
-    res.status(400).json({ error: "Please provide a new description."})
-
-    } else {
-        dbProjects.update(id, updatedProject)
-            .then((project) => {
-                if (!project) {
-                    res.status.apply(404).json({ error: "The project with that ID doesn't exist."})
-
-                } else {
-                    res.status(200).json(project)
-                }
-            })
-            .catch((err) => {
-                res.status(500).json({ error: "Couldn't update project."})
-            })
-})
+router.delete('/:id', async (req, res) => {
+	try {
+		const { id } = req.params;
+		const count = await Projects.remove(id);
+		if (count > 0) {
+			res.status(200).json({ message: 'The project has been deleted' });
+		} else {
+			res.status(404).json({ message: 'The project could not be found.' });
+		}
+	} catch (err) {
+		res.status(500).json({ message: 'The project could not be deleted.' });
+	}
+});
 
 
 module.exports = router;
