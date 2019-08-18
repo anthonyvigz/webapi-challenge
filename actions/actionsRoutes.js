@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
 	try {
-		const actions = await Actions.get(req.id);
+		const actions = await dbActions.get(req.id);
 		res.status(200).json(actions);
 	} catch (err) {
 		console.log(err);
@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
 	try {
 		const { id } = req.params;
-		const action = await Actions.get(id);
+		const action = await dbActions.get(id);
 		res.status(200).json(action);
 	} catch (err) {
 		console.log(err);
@@ -32,7 +32,7 @@ router.get('/:id', async (req, res) => {
 router.post('/:id', async (req, res) => {
 	const actionInfo = { ...req.body, project_id: req.params.id };
 	try {
-		const action = await Actions.insert(actionInfo);
+		const action = await dbActions.insert(actionInfo);
 		res.status(201).json(action);
 	} catch (err) {
 		console.log(err);
@@ -45,7 +45,7 @@ router.post('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
 	try {
 		const { id } = req.params;
-		const count = await Actions.remove(id);
+		const count = await dbActions.remove(id);
 		if (count > 0) {
 			res.status(200).json(action);
 		} else {
@@ -61,7 +61,7 @@ router.delete('/:id', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
 	try {
-		const action = await Actions.update(req.params.id, req.body);
+		const action = await dbActions.update(req.params.id, req.body);
 		if (action) {
 			res.status(200).json(action);
 		} else {
