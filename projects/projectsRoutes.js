@@ -64,7 +64,7 @@ router.post("/", async (req, res) => {
 
 router.put('/:id', async (req, res) => {
 	try {
-		const project = await Projects.update(req.params.id, req.body);
+		const project = await dbProjects.update(req.params.id, req.body);
 		if (project) {
 			res.status(200).json(project);
 		} else {
@@ -81,7 +81,7 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
 	try {
 		const { id } = req.params;
-		const count = await Projects.remove(id);
+		const count = await dbProjects.remove(id);
 		if (count > 0) {
 			res.status(200).json({ message: 'The project has been deleted' });
 		} else {

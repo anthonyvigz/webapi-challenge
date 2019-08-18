@@ -23,6 +23,7 @@ server.use(helmet());
 /// applying routes to server
 
 server.use('/api/projects', projectsRouter);
+server.use('/api/actions', actionsRouter);
 
 /// main server get request
 
